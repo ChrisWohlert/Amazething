@@ -1,4 +1,4 @@
-{-# LANGUAGE DeriveFunctor, DeriveFoldable #-}
+{-# LANGUAGE DeriveFunctor, DeriveFoldable, TypeSynonymInstances, FlexibleInstances #-}
 
 module MazeGenerator where
 
@@ -6,19 +6,23 @@ import Control.Monad.Trans.State.Lazy
 import qualified Data.Set as S
 import System.Random
 import System.Random.Shuffle
+import Data.List
 
 type Node = (Double, Double)
 
-data LinkedNode a = LinkedNode a [LinkedNode a] | Blocked deriving(Show, Functor, Foldable)
+data LinkedNode a = LinkedNode a [LinkedNode a] | Blocked a deriving(Show, Functor, Foldable)
 
-data ReverseBacktracking = ReverseBacktracking { unvisited :: S.Set Node, rGen :: StdGen }
+data ReverseBacktracking a = ReverseBacktracking { unvisited :: S.Set a, rGen :: StdGen }
 
-reverseBacktracking :: [Node] -> IO (LinkedNode Node)
-reverseBacktracking nodes = do
-    g <- getStdGen
-    return $ evalState (runReverseBacktracking $ head nodes) $ ReverseBacktracking { unvisited = S.fromList nodes, rGen = g }
+class Neighbour a where
+    getNbs :: a -> [a]
 
-runReverseBacktracking :: Node -> State ReverseBacktracking (LinkedNode Node)
+instance Neighbour Node where
+    getNbs (x, y) = [(x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)]
+
+reverseBacktracking :: (Neighbour a, Ord a) => [a] -> StdGen -> LinkedNode a
+reverseBacktracking nodes g = evalState (runReverseBacktracking $ head nodes) $ ReverseBacktracking { unvisited = S.fromList nodes, rGen = g }
+
 runReverseBacktracking current = do
     isMember <- S.member current . unvisited <$> get
     if isMember 
@@ -27,12 +31,16 @@ runReverseBacktracking current = do
             nbs <- getNeighbours current
             return $ LinkedNode current nbs
         else
-            return Blocked
+            return $ Blocked current
 
 
-getNeighbours (x, y) = do
+getNeighbours nb = do
     g <- rGen <$> get
-    let nbs = shuffle' [(x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)] 4 g
+    let nbs = shuffle' (getNbs nb) 4 g
     let (_, sd) = randomR (0 :: Int, 1) g
     modify $ \ s -> s { rGen = sd }
     mapM runReverseBacktracking nbs
+
+
+getWalls (Blocked node) = []
+getWalls (LinkedNode node nodes) = [x | (Blocked x) <- nodes]

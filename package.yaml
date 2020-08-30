@@ -28,6 +28,7 @@ dependencies:
 - random-shuffle
 - reanimate
 - reanimate-svg
+- lens
 
 library:
   source-dirs: src
