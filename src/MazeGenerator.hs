@@ -44,8 +44,10 @@ getNeighbours nb = do
     modify $ \ s -> s { rGen = sd }
     mapM runReverseBacktracking nbs
 
-getWalls (Blocked node) = []
-getWalls (LinkedNode node nodes) = [findEdge node x | (Blocked x) <- nodes]
+getWalls _ (Blocked node) = []
+getWalls prev (LinkedNode node nodes) = [findEdge node x | (Blocked x) <- nodes, x /= prev]
 
 findEdge :: V2 Double -> V2 Double -> (V2  Double, V2 Double)
-findEdge (V2 a b) (V2 c d) = (V2 1 1, V2 1 1)
+findEdge a b = (go (-), go (+))
+    where
+        go f = V2 0.5 0.5 * f (a + b) (perp (b - a))

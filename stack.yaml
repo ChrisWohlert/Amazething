@@ -41,8 +41,11 @@ packages:
 #
 extra-deps:
     - earcut-0.1.0.4
-    - reanimate-0.4.1.0
+    - reanimate-0.4.2.0
     - reanimate-svg-0.10.0.0
+    - hgeometry-0.11.0.0
+    - hgeometry-combinatorial-0.11.0.0
+    - vinyl-0.13.0
 
 # Override default flag values for local packages and extra-deps
 # flags: {}
