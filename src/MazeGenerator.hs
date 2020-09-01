@@ -7,6 +7,9 @@ import qualified Data.Set as S
 import System.Random
 import System.Random.Shuffle
 import Data.List
+import Linear.V2
+
+type Wall = ((Double, Double), (Double, Double))
 
 type Node = (Double, Double)
 
@@ -41,6 +44,8 @@ getNeighbours nb = do
     modify $ \ s -> s { rGen = sd }
     mapM runReverseBacktracking nbs
 
-
 getWalls (Blocked node) = []
-getWalls (LinkedNode node nodes) = [x | (Blocked x) <- nodes]
+getWalls (LinkedNode node nodes) = [findEdge node x | (Blocked x) <- nodes]
+
+findEdge :: V2 Double -> V2 Double -> (V2  Double, V2 Double)
+findEdge (V2 a b) (V2 c d) = (V2 1 1, V2 1 1)

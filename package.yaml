@@ -29,6 +29,9 @@ dependencies:
 - reanimate
 - reanimate-svg
 - lens
+- hspec
+- QuickCheck
+- linear
 
 library:
   source-dirs: src

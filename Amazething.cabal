@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: d0c9a753718a73237529a81d4dc232220bc8229fdbd732566766d885669475ce
+-- hash: 8b742a67fa7109314ba0b34135264640c4c1b811c8f7df498749b217db71e6de
 
 name:           Amazething
 version:        0.1.0.0
@@ -35,9 +35,12 @@ library
       src
   build-depends:
       MonadRandom
+    , QuickCheck
     , base >=4.7 && <5
     , containers
+    , hspec
     , lens
+    , linear
     , random
     , random-shuffle
     , reanimate
@@ -55,9 +58,12 @@ executable Amazething-exe
   build-depends:
       Amazething
     , MonadRandom
+    , QuickCheck
     , base >=4.7 && <5
     , containers
+    , hspec
     , lens
+    , linear
     , random
     , random-shuffle
     , reanimate
@@ -76,9 +82,12 @@ test-suite Amazething-test
   build-depends:
       Amazething
     , MonadRandom
+    , QuickCheck
     , base >=4.7 && <5
     , containers
+    , hspec
     , lens
+    , linear
     , random
     , random-shuffle
     , reanimate
