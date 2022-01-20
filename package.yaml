@@ -21,17 +21,9 @@ description:         Please see the README on GitHub at <https://github.com/gith
 
 dependencies:
 - base >= 4.7 && < 5
-- transformers
+- mtl
 - containers
 - random
-- MonadRandom
-- random-shuffle
-- reanimate
-- reanimate-svg
-- lens
-- hspec
-- QuickCheck
-- linear
 
 library:
   source-dirs: src
@@ -57,3 +49,5 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - Amazething
+
+default-extensions: TupleSections

@@ -1,53 +1,36 @@
-{-# LANGUAGE DeriveFunctor, DeriveFoldable, TypeSynonymInstances, FlexibleInstances #-}
-
 module MazeGenerator where
 
-import Control.Monad.Trans.State.Lazy
-import qualified Data.Set as S
-import System.Random
-import System.Random.Shuffle
+import Control.Monad.State.Lazy
+import Data.Foldable (Foldable)
 import Data.List
-import Linear.V2
+import qualified Data.Map as M
+import System.Random
 
-type Wall = ((Double, Double), (Double, Double))
+type Position = (Int, Int)
 
-type Node = (Double, Double)
+data Tile = Tile Position [Tile]
+  deriving (Show)
 
-data LinkedNode a = LinkedNode a [LinkedNode a] | Blocked a deriving(Show, Functor, Foldable)
+getPos :: Tile -> Position
+getPos (Tile pos _) = pos
 
-data ReverseBacktracking a = ReverseBacktracking { unvisited :: S.Set a, rGen :: StdGen }
+genMaze = do
+  let gen = mkStdGen 137
+  let maze = evalState (buildMaze gen 5 5 (Tile (0, 0) [])) []
+  print $ allConnections maze
+  print maze
 
-class Neighbour a where
-    getNbs :: a -> [a]
+buildMaze :: RandomGen g => g -> Int -> Int -> Tile -> State [Position] Tile
+buildMaze gen width height (Tile pos@(x, y) ns) = do
+  let (randomPath, g) = uniformR (1, 4) gen
+  modify (pos :)
+  visited <- get
+  let findNext = [Tile (x', y') [] | (x', y') <- [(x -1, y), (x + 1, y), (x, y -1), (x, y + 1)], notElem (x', y') visited && x' >= 0 && x' <= width && y' >= 0 && y' <= height]
+  case findNext of
+    [] -> return $ Tile pos ns
+    _ -> do
+      next <- buildMaze g width height ((!! max 0 randomPath) . cycle $ findNext)
+      return (Tile pos (next : ns))
 
-instance Neighbour Node where
-    getNbs (x, y) = [(x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)]
-
-reverseBacktracking :: (Neighbour a, Ord a) => [a] -> StdGen -> LinkedNode a
-reverseBacktracking nodes g = evalState (runReverseBacktracking $ head nodes) $ ReverseBacktracking { unvisited = S.fromList nodes, rGen = g }
-
-runReverseBacktracking current = do
-    isMember <- S.member current . unvisited <$> get
-    if isMember 
-        then do
-            modify $ \ s -> s { unvisited = S.delete current (unvisited s) }
-            nbs <- getNeighbours current
-            return $ LinkedNode current nbs
-        else
-            return $ Blocked current
-
-
-getNeighbours nb = do
-    g <- rGen <$> get
-    let nbs = shuffle' (getNbs nb) 4 g
-    let (_, sd) = randomR (0 :: Int, 1) g
-    modify $ \ s -> s { rGen = sd }
-    mapM runReverseBacktracking nbs
-
-getWalls _ (Blocked node) = []
-getWalls prev (LinkedNode node nodes) = [findEdge node x | (Blocked x) <- nodes, x /= prev]
-
-findEdge :: V2 Double -> V2 Double -> (V2  Double, V2 Double)
-findEdge a b = (go (-), go (+))
-    where
-        go f = V2 0.5 0.5 * f (a + b) (perp (b - a))
+allConnections :: Tile -> [(Position, Position)]
+allConnections (Tile pos ns) = map ((pos,) . getPos) ns ++ concatMap allConnections ns

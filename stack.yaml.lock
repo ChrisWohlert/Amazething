@@ -3,52 +3,11 @@
 # For more information, please see the documentation at:
 #   https://docs.haskellstack.org/en/stable/lock_files
 
-packages:
-- completed:
-    hackage: earcut-0.1.0.4@sha256:d5118b3eecf24d130263d81fb30f1ff56b1db43036582bfd1d8cc9ba3adae8be,1010
-    pantry-tree:
-      size: 373
-      sha256: 59f031b5504907a8c385a9da120eeaae273b78a05890705a0fbb41b214b7ec43
-  original:
-    hackage: earcut-0.1.0.4
-- completed:
-    hackage: reanimate-0.4.2.0@sha256:e681bbdba6052f444b5095d9532682f42c38c31f689f9aad74f16ee2e3afddc7,5690
-    pantry-tree:
-      size: 28969
-      sha256: 0572da95a9afb9af5ac314fde5f61ba55a7418e50218fc998ca4098253461dd2
-  original:
-    hackage: reanimate-0.4.2.0
-- completed:
-    hackage: reanimate-svg-0.10.0.0@sha256:1bbe318df56eaeb3fb18ef8148e5fca6c385dd0e18d22de60fbf003d897c4c1d,2508
-    pantry-tree:
-      size: 1118
-      sha256: b749a19ee8f67d9bf5cd2730e545969120b3250bf8049ffaa220b9261d0a636d
-  original:
-    hackage: reanimate-svg-0.10.0.0
-- completed:
-    hackage: hgeometry-0.11.0.0@sha256:09ead201a6ac3492c0be8dda5a6b32792b9ae87cab730b8362d46ee8d5c2acb4,11714
-    pantry-tree:
-      size: 10298
-      sha256: b5665fbc036aa985218b44d8036dd0cfde388d26a236dc51acf6bf266f98609c
-  original:
-    hackage: hgeometry-0.11.0.0
-- completed:
-    hackage: hgeometry-combinatorial-0.11.0.0@sha256:03176f235a1c49a415fe1266274dafca84deb917cbcbf9a654452686b4cd2bfe,8286
-    pantry-tree:
-      size: 3959
-      sha256: 917d3000636f5f5b5b693084228def875d3c5f89e592b4d38ef8f9051c1f7fbc
-  original:
-    hackage: hgeometry-combinatorial-0.11.0.0
-- completed:
-    hackage: vinyl-0.13.0@sha256:0f247cd3f8682b30881a07de18e6fec52d540646fbcb328420049cc8d63cd407,3724
-    pantry-tree:
-      size: 1857
-      sha256: 860fb95820b595161cdbdec5f376100ebae2d14e5ef0dbe311546202f7525d01
-  original:
-    hackage: vinyl-0.13.0
+packages: []
 snapshots:
 - completed:
-    size: 532381
-    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/16/11.yaml
-    sha256: 1f43c4ad661a114a4f9dd4580988f30da1208d844c097714f5867c52a02e0aa1
-  original: lts-16.11
+    size: 585817
+    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/18/5.yaml
+    sha256: 22d24d0dacad9c1450b9a174c28d203f9bb482a2a8da9710a2f2a9f4afee2887
+  original:
+    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/18/5.yaml
