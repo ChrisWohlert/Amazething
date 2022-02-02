@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 2eaf4aefe0bd89e0fca072ad5c0a695086139b173cf4882fa8f05c7406addf51
+-- hash: f35ebb200bdc732f5010ffc7956ed65b03fc04cd4d81d477b190201f8f05a015
 
 name:           Amazething
 version:        0.1.0.0
@@ -28,7 +28,6 @@ source-repository head
 library
   exposed-modules:
       Lib
-      MazeGenerator
   other-modules:
       Paths_Amazething
   hs-source-dirs:
@@ -40,6 +39,8 @@ library
     , containers
     , mtl
     , random
+    , reanimate
+    , reanimate-svg
   default-language: Haskell2010
 
 executable Amazething-exe
@@ -57,6 +58,8 @@ executable Amazething-exe
     , containers
     , mtl
     , random
+    , reanimate
+    , reanimate-svg
   default-language: Haskell2010
 
 test-suite Amazething-test
@@ -75,4 +78,6 @@ test-suite Amazething-test
     , containers
     , mtl
     , random
+    , reanimate
+    , reanimate-svg
   default-language: Haskell2010
