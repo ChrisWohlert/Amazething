@@ -32,31 +32,36 @@ genMaze = do
 
 animateMaze :: Tile -> Animation
 animateMaze tile = do
-  let allCorridors = execState (corridors tile tile) []
+  let allCorridors = extendDeadEnds $ execState (corridors tile) []
   let anims =
-        map (\a -> animCorridor a `parA` animWalkway a) allCorridors
-  addStatic (mkBackground "white") (foldl andThen (pause 0) anims)
+        map (\a -> animCorridor a `parA` animWalkway a) (Debug.trace (show allCorridors) allCorridors)
+  addStatic (mkBackground "gray") (foldl andThen (pause 0) anims)
   where
-    corridors :: Tile -> Tile -> State [[Position]] ()
-    corridors (Tile pos ns) (Tile npos []) = modify ([npos] :)
-    corridors c@(Tile pos ns) (Tile npos _) = do
-      forM_ ns (corridors c)
+    corridors :: Tile -> State [[Position]] ()
+    corridors (Tile pos []) = modify ([pos] :)
+    corridors c@(Tile pos (n:ns)) = do
+      corridors n
+      forM_ ns (\ next -> modify ([pos]:) >> corridors next)
       cs <- get
       case cs of
-        [] -> put [[npos, pos]]
-        (current : rest) -> put ((npos : pos : current) : rest)
-    test (Tile pos ns) = unfoldr undefined b
+        [] -> put [[pos]]
+        (current : rest) -> put ((pos : current) : rest)
     drawCorridor color width t a =
       mkLinePath a
         & withStrokeColor color
+          . partialSvg t
           . withFillOpacity 0
           . withStrokeWidth width
           . scale 0.3
           . translate -5 -5
-          . partialSvg t
-          . pathify
     animWalkway a = mkAnimation (genericLength a / 15) $ \t -> drawCorridor "white" 0.6 t a
-    animCorridor a = mkAnimation (genericLength a / 15) $ \t -> drawCorridor "red" 0.8 t a
+    animCorridor a = mkAnimation (genericLength a / 15) $ \t -> drawCorridor "black" 0.8 t a
+
+extendDeadEnds :: [[Position]] -> [[Position]]
+extendDeadEnds cors = map (reverse . extend . reverse . extend) cors
+  where
+    extend ((x, y):(x', y'):rest ) = ((0.5 * (x - x')) + x, (0.5 * (y - y')) + y):(x', y'):rest
+    extend cors = cors
 
 buildMaze :: RandomGen g => g -> Double -> Double -> Tile -> State [Position] (Maybe Tile)
 buildMaze gen width height (Tile pos@(x, y) ns) = do
